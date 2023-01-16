@@ -1,0 +1,43 @@
+<div [formGroup]="formGroup" class="search">
+  <input
+    formControlName="search"
+    placeholder="Entrez votre recherche ici"
+    class="search-input"
+  />
+  <select formControlName="type" class="search-select" placeholder="type">
+    <option *ngFor="let type of typeOptions$ | async" [value]="type.value">
+      {{ type.viewValue }}
+    </option>
+  </select>
+  <select formControlName="ability" class="search-select" placeholder="ability">
+    <option
+      *ngFor="let ability of abilityOptions$ | async"
+      [value]="ability.value"
+    >
+      {{ ability.viewValue }}
+    </option>
+  </select>
+</div>
+<div class="tableau">
+  <div class="header">
+    <div class="tableau-value">Name</div>
+    <div class="tableau-value">Type</div>
+    <div class="tableau-value">Ability</div>
+  </div>
+
+  <div *ngFor="let data of dataSource$ | async" class="tableau-line">
+    <div class="tableau-value">{{ data.name }}</div>
+    <div class="tableau-value">
+      <span *ngFor="let type of data.types; last as isLast"
+        >{{ type.type.name
+        }}<ng-container *ngIf="!isLast">, </ng-container></span
+      >
+    </div>
+    <div class="tableau-value">
+      <span *ngFor="let ability of data.abilities; last as isLast"
+        >{{ ability.ability.name
+        }}<ng-container *ngIf="!isLast">, </ng-container></span
+      >
+    </div>
+  </div>
+</div>
