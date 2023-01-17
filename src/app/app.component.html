@@ -4,12 +4,25 @@
     placeholder="Entrez votre recherche ici"
     class="search-input"
   />
-  <select formControlName="type" class="search-select" placeholder="type">
+  <select
+    formControlName="type"
+    class="search-select"
+    placeholder="type"
+    multiple
+  >
+  <option selected [value]="undefined">Type</option>
+
     <option *ngFor="let type of typeOptions$ | async" [value]="type.value">
       {{ type.viewValue }}
     </option>
   </select>
-  <select formControlName="ability" class="search-select" placeholder="ability">
+  <select
+    formControlName="ability"
+    class="search-select"
+    placeholder="ability"
+    multiple
+  >
+    <option selected [value]="undefined">Ability</option>
     <option
       *ngFor="let ability of abilityOptions$ | async"
       [value]="ability.value"

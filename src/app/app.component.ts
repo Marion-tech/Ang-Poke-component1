@@ -35,46 +35,52 @@ export class AppComponent {
     ]).pipe(
       map(
         ([formValues, data]: [
-          { search: string; type: number; ability: number },
+          { search: string; type: number[]; ability: number[] },
           IPokemonDetail[]
         ]) => {
-          console.log(formValues);
-          // Première étape, faire en sorte que la recherche fonctionne
+          // Première étape, faire en sorte que x  la recherche fonctionne
           let res = data;
           if (formValues.search != null) {
-            res = res.filter(
-              (resFilt: IPokemonDetail) =>
-                resFilt.name.includes(formValues.search) ||
-                resFilt.types.find((resType: IPokemonType) =>
-                  resType.type.name.includes(formValues.search)
-                ) ||
-                resFilt.abilities.find((resAbi: IAbility) =>
-                  resAbi.ability.name.includes(formValues.search)
-                )
-            );
+            let searchValue: string[] = formValues.search.split(' ');
+            console.log(searchValue);
+
+            searchValue.forEach((value: string) => {
+              res = res.filter(
+                (resFilt: IPokemonDetail) =>
+                  resFilt.name.includes(value) ||
+                  resFilt.types.find((resType: IPokemonType) =>
+                    resType.type.name.includes(value)
+                  ) ||
+                  resFilt.abilities.find((resAbi: IAbility) =>
+                    resAbi.ability.name.includes(value)
+                  )
+              );
+            });
           }
 
-          if (formValues.type) {
+          if (formValues.type?.filter((v: number) => !!v).length > 0) {
             res = res.filter((resFilt: IPokemonDetail) => {
               return !!resFilt.types.find((resid: IPokemonType) => {
-                return (
-                  +resid.type.url
-                    .replace('https://pokeapi.co/api/v2/type/', '')
-                    .replace('/', '') === +formValues.type
-                );
+                let id: number = +resid.type.url
+                  .replace('https://pokeapi.co/api/v2/type/', '')
+                  .replace('/', '');
+                return formValues.type.find((res: number) => res === id);
               });
             });
           }
 
-          if (formValues.ability) {
-            res = res.filter((resFilt: IPokemonDetail) => {
-              return resFilt.abilities.find(
-                (resAbil: IAbility) =>
-                  +resAbil.ability.url
-                    .replace('https://pokeapi.co/api/v2/ability/', '')
-                    .replace('/', '') === +formValues.ability
-              );
-            });
+          console.log(formValues.ability);
+          if (formValues.ability?.filter((v: number) => !!v).length > 0) {
+            for (let value of formValues.ability.filter((v: number) => !!v)) {
+              res = res.filter((resFilt: IPokemonDetail) => {
+                return resFilt.abilities.find(
+                  (resAbil: IAbility) =>
+                    +resAbil.ability.url
+                      .replace('https://pokeapi.co/api/v2/ability/', '')
+                      .replace('/', '') === +value
+                );
+              });
+            }
           }
 
           return res;

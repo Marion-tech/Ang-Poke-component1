@@ -55,7 +55,7 @@ export class PokeService {
                 .replace('/', ''),
               viewValue: res.name,
             };
-          });
+          }).sort((a,b) => a.viewValue > b.viewValue ? 1 : -1);
         })
       );
   }
